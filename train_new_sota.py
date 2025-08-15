@@ -8,10 +8,10 @@ import os
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'src')))
 from dataset import CustomFlickrDataset
-# --- IMPORTANT: We now import the new model from the new file ---
+# Importing the Model
 from model_advanced import GroundingAdvancedModel
 
-# --- Configuration ---
+# Configuration
 EPOCHS = 15
 BATCH_SIZE = 16 
 LEARNING_RATE = 1e-4
@@ -20,7 +20,7 @@ BASE_DATA_DIR = r"C:\projects\AIMS_TASK\visual_grounding\data\flickr30k_entities
 MODEL_SAVE_DIR = os.path.join("outputs", "weights", "new_sota_train")
 
 class Matcher:
-    """Matches the best predicted box to the ground truth box."""
+    # Matches the best predicted box to the ground truth box.
     def __init__(self, cost_l1: float = 2.0, cost_giou: float = 5.0):
         self.cost_l1 = cost_l1
         self.cost_giou = cost_giou
@@ -37,7 +37,7 @@ class Matcher:
         return best_match_indices
 
 class CombinedSetLoss(nn.Module):
-    """Computes the final loss by combining alignment, L1, and GIoU losses."""
+    # Computes the final loss by combining alignment, L1, and GIoU losses.
     def __init__(self, matcher, weight_l1=2.0, weight_giou=5.0, weight_align=1.0):
         super().__init__()
         self.matcher = matcher
@@ -78,7 +78,7 @@ def main():
     scaler = torch.amp.GradScaler(enabled=(device.type == 'cuda'))
     scheduler = StepLR(optimizer, step_size=5, gamma=0.1)
 
-    print("\n--- Starting New SOTA Model Training ---")
+    print("\nStarting New SOTA Model Training")
     os.makedirs(MODEL_SAVE_DIR, exist_ok=True)
     
     for epoch in range(EPOCHS):
@@ -110,7 +110,6 @@ def main():
         torch.save(model.state_dict(), epoch_save_path)
         print(f"Model saved to: {epoch_save_path}")
 
-    print("\n--- All Training Epochs Complete ---")
+    print("\nAll Training Epochs Complete")
 
-if __name__ == '__main__':
-    main()
+if __name__
