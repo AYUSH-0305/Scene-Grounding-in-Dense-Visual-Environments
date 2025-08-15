@@ -1,0 +1,52 @@
+# Python virtual environment
+venv/
+/venv/
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Large data files - The Flickr30k dataset should not be committed
+data/
+/data/
+
+# Trained model weights and outputs
+# Ignore the entire outputs directory...
+outputs/
+# ...but make an exception for the specific model weight file you want to submit.
+# This keeps your repository clean while allowing you to commit the final model.
+!outputs/weights/new_sota_train/new_sota_model_epoch_13.pth
+
+# IDE and editor configuration files
+.vscode/
+.idea/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# -------------------------------------------------------------------
+# Legacy and Unused Files from Previous Development Stages
+# -------------------------------------------------------------------
+
+# Old model definition (Swin + RoBERTa)
+src/model.py
+
+# Old training scripts
+src/train.py
+src/train_final.py
+src/train_reset.py
+src/train_sota.py
+
+# Old inference scripts
+inference.py
+inference_reset.py
+
+# Unused application files
+app.py
+run_gui_dummy.py
+
+# Development and debugging scripts
+scripts/
