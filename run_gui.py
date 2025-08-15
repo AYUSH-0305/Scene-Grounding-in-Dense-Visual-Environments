@@ -6,7 +6,7 @@ import sys
 import torch
 from transformers import BertTokenizer
 
-# --- Add src directory to path to allow local imports ---
+# Add src directory to path to allow local imports
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'src')))
 from model_advanced import GroundingAdvancedModel # Use the SOTA model
 
@@ -16,16 +16,16 @@ class GroundingApp:
         self.root.title("Visual Grounding Inference")
         self.root.geometry("1100x600")
 
-        # --- Configuration ---
+        # Configuration
         self.DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.MODEL_WEIGHTS_PATH = r"outputs\weights\new_sota_train\new_sota_model_epoch_13.pth"
         self.BASE_IMAGE_DIR = r"C:\projects\AIMS_TASK\visual_grounding\data\flickr30k_entities\images"
 
-        # --- Load Model and Tokenizer ---
+        # Load Model and Tokenizer
         self.model = self.load_model()
         self.tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
 
-        # --- UI Layout ---
+        # UI Layout
         self.create_widgets()
 
     def load_model(self):
@@ -42,11 +42,11 @@ class GroundingApp:
             return None
 
     def create_widgets(self):
-        # --- Main Frame ---
+        # Main Frame
         main_frame = ttk.Frame(self.root, padding="10")
         main_frame.pack(fill=tk.BOTH, expand=True)
 
-        # --- Input Frame ---
+        # Input Frame
         input_frame = ttk.LabelFrame(main_frame, text="Controls", padding="10")
         input_frame.pack(fill=tk.X, pady=5)
 
@@ -65,7 +65,7 @@ class GroundingApp:
 
         input_frame.columnconfigure(1, weight=1)
 
-        # --- Image Display Frame ---
+        # Image Display Frame
         image_frame = ttk.LabelFrame(main_frame, text="Results", padding="10")
         image_frame.pack(fill=tk.BOTH, expand=True, pady=5)
         
@@ -88,7 +88,7 @@ class GroundingApp:
             messagebox.showerror("File Error", f"Image not found at:\n{image_path}")
             return
 
-        # --- Load and Display Original Image ---
+        # Load and Display Original Image
         original_image = Image.open(image_path).convert("RGB")
         img_w, img_h = original_image.size
         
@@ -98,7 +98,7 @@ class GroundingApp:
         self.original_photo = ImageTk.PhotoImage(display_img)
         self.original_panel.config(image=self.original_photo)
 
-        # --- Preprocess and Predict ---
+        # Preprocess and Predict
         image_tensor = self.model.visual_processor(images=original_image, return_tensors="pt")['pixel_values'].to(self.DEVICE)
         tokenized = self.tokenizer(prompt, padding='max_length', truncation=True, max_length=32, return_tensors="pt")
         input_ids = tokenized['input_ids'].to(self.DEVICE)
@@ -107,7 +107,7 @@ class GroundingApp:
         with torch.no_grad():
             pred_logits, pred_boxes = self.model(image_tensor, input_ids, attention_mask)
 
-        # --- Post-process and Draw Box ---
+        # Post-process and Draw Box
         best_box_idx = pred_logits.squeeze().argmax()
         best_box = pred_boxes.squeeze()[best_box_idx].cpu().numpy()
 
@@ -122,12 +122,10 @@ class GroundingApp:
         draw = ImageDraw.Draw(boxed_image)
         draw.rectangle(box_unnormalized, outline="lime", width=4)
 
-        # --- Display Boxed Image ---
+        # Display Boxed Image
         boxed_image.thumbnail((500, 500))
         self.boxed_photo = ImageTk.PhotoImage(boxed_image)
         self.boxed_panel.config(image=self.boxed_photo)
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    app = GroundingApp(root)
-    root.mainloop()
+    root
