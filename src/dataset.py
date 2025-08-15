@@ -17,6 +17,7 @@ class CustomFlickrDataset(Dataset):
         self.sentence_dir = os.path.join(base_data_dir, 'Sentences')
         self.annotated_image_ids = [f.split('.')[0] for f in os.listdir(self.annotation_dir) if f.endswith('.xml')]
         
+        # Train/val transforms
         if split == 'train':
             self.transform = transforms.Compose([
                 transforms.Resize((224, 224)),
@@ -32,7 +33,7 @@ class CustomFlickrDataset(Dataset):
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
             ])
             
-        # UPDATED: Handle both BERT and RoBERTa tokenizers
+        # Handle both BERT and RoBERTa tokenizers
         if 'roberta' in tokenizer_name:
             self.tokenizer = RobertaTokenizer.from_pretrained(tokenizer_name)
         else:
@@ -41,6 +42,7 @@ class CustomFlickrDataset(Dataset):
         num_images = len(self.annotated_image_ids)
         num_train = int(num_images * 0.9)
         
+        # Split train/val
         if split == 'train':
             self.image_ids = self.annotated_image_ids[:num_train]
         else:
@@ -95,4 +97,4 @@ class CustomFlickrDataset(Dataset):
         normalized_box = [cx / original_w, cy / original_h, w / original_w, h / original_h]
         box_tensor = torch.tensor(normalized_box, dtype=torch.float32)
 
-        return {'image': image_tensor, 'input_ids': input_ids, 'attention_mask': attention_mask, 'box': box_tensor}
+        return {'image': image_tensor, 'input_ids': input_ids, 'attention_mask': attention_mask, 'box':
