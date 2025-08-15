@@ -1,3 +1,13 @@
+# Visual Grounding with Flickr30k Entities
+
+This project implements a **visual grounding** system using the Flickr30k Entities dataset.  
+It allows you to train a state-of-the-art model for grounding natural language phrases in images and interactively test predictions via a GUI.
+
+---
+
+## 📂 Project Structure
+
+```
 visual_grounding/
 │
 ├── data/
@@ -24,64 +34,107 @@ visual_grounding/
 ├── run_gui.py
 ├── train_new_sota.py
 └── README.md
+```
 
-1. Setup and Installation
-Prerequisites
-Python 3.8+
+---
 
-NVIDIA GPU with CUDA support (recommended for training)
+## ⚙️ Setup & Installation
 
-Installation
-Clone the repository:
+### Prerequisites
+- Python **3.8+**
+- NVIDIA GPU with CUDA (recommended for training)
 
+### Installation Steps
+```bash
+# Clone the repository
 git clone <your-repo-url>
 cd visual_grounding
 
-Create a virtual environment:
-
+# Create a virtual environment
 python -m venv venv
-source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
 
-Install the required libraries:
+# Activate the virtual environment
+# Linux/Mac:
+source venv/bin/activate
+# Windows:
+venv\Scripts\activate
 
+# Install dependencies
 pip install torch torchvision transformers timm Pillow
+```
 
-2. Dataset Setup
-Download the Dataset: This project uses the Flickr30k Entities dataset. You will need to acquire it and extract its contents.
+---
 
-Organize the Data: Place the dataset folders into the data/flickr30k_entities/ directory as shown in the project structure above.
+## 📦 Dataset Setup
 
-Update Paths: Open the following files and ensure that the BASE_DATA_DIR variable points to the correct absolute path of your flickr30k_entities folder:
+This project uses the **Flickr30k Entities** dataset.
 
-train_new_sota.py
+1. **Download Dataset**  
+   Get the dataset from the official source and extract it.
 
-run_gui.py
+2. **Organize Data**  
+   Place files in:
+   ```
+   data/flickr30k_entities/
+       ├── annotations/
+       ├── images/
+       └── Sentences/
+   ```
 
-Example path: C:\projects\AIMS_TASK\visual_grounding\data\flickr30k_entities
+3. **Update Paths**  
+   In both:
+   - `train_new_sota.py`
+   - `run_gui.py`
 
-3. How to Use the Project
-Training the Model
-To train the state-of-the-art model from scratch, run the advanced training script from the root directory:
+   Set:
+   ```python
+   BASE_DATA_DIR = r"C:\projects\AIMS_TASK\visual_grounding\data\flickr30k_entities"
+   ```
+   *(Replace with your actual absolute path)*
 
+---
+
+## 🚀 Training the Model
+
+To train from scratch:
+```bash
 python train_new_sota.py
+```
 
-The script will automatically use a GPU if available.
+- Uses GPU if available.
+- Model weights are saved in:
+  ```
+  outputs/weights/new_sota_train/
+  ```
 
-Model weights will be saved in the outputs/weights/new_sota_train/ directory after each epoch.
+---
 
-Running the GUI
-To use the interactive GUI with the trained model, you first need to update the model path.
+## 🖥 Running the GUI
 
-Update Model Path: Open run_gui.py and ensure the MODEL_WEIGHTS_PATH variable points to your best-trained model (e.g., the one from epoch 13).
+1. **Set Model Path** in `run_gui.py`:
+```python
+MODEL_WEIGHTS_PATH = r"outputs/weights/new_sota_train/new_sota_model_epoch_13.pth"
+```
 
-Launch the GUI:
-
+2. **Run GUI**:
+```bash
 python run_gui.py
+```
 
-Usage:
+3. **Usage**:
+   - Enter **Image ID** from Flickr30k (e.g., `36979`).
+   - Enter a **Text Prompt** describing the object (e.g., `a green table`).
+   - Click **Run Prediction** to see:
+     - Original image
+     - Predicted bounding box
 
-Enter an Image ID from the Flickr30k dataset (e.g., 36979).
+---
 
-Enter a Text Prompt describing an object in the image (e.g., a green table).
+## 📌 Notes
+- GPU acceleration is recommended for faster training and inference.
+- Hyperparameters (batch size, learning rate) can be adjusted in `train_new_sota.py`.
 
-Click "Run Prediction" to see the original image and the model's predicted bounding box.
+---
+
+## 📜 License
+This project is for research and educational purposes. Please verify dataset licensing before use.
